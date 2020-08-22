@@ -1,5 +1,5 @@
 /*
-Copyright © 2020 NAME HERE <EMAIL ADDRESS>
+Copyright © 2020 Nathan Mkaya <nathanmkaya@gmail.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,11 +20,12 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
 var cfgFile string
+var packageName string
+var keyFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -36,9 +37,10 @@ examples and usage of using your application. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	/*Run: func(cmd *cobra.Command, args []string) {
+		//pkg.CreateClient(cfgFile)
+		println(args)
+	},*/
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -52,16 +54,11 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-
-	// Here you will define your flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
-
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.landa.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is .landa)")
+	rootCmd.PersistentFlags().StringVarP(&keyFile, "key", "k", "", "key file (e.g service account json file)")
+	viper.BindPFlag("key", rootCmd.PersistentFlags().Lookup("key"))
+	rootCmd.PersistentFlags().StringVarP(&packageName, "package", "p", "", "package name")
+	viper.BindPFlag("package", rootCmd.PersistentFlags().Lookup("package"))
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -71,12 +68,11 @@ func initConfig() {
 		viper.SetConfigFile(cfgFile)
 	} else {
 		// Find home directory.
-		home, err := homedir.Dir()
+		home, err := os.Getwd()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-
 		// Search config in home directory with name ".landa" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigName(".landa")
