@@ -34,6 +34,22 @@ var rootCmd = &cobra.Command{
 the latest version code for an app deployed to play store`,
 }
 
+const (
+	defaultConfigName = ".vrsncode"
+
+	configFlag          = "config"
+	configFlagShortHand = "c"
+	configFlagUsageDesc = "config file (default is .vrsncode)"
+
+	keyFlag          = "key"
+	keyFlagShortHand = "k"
+	keyFlagUsageDesc = "key file (e.g service account json file)"
+
+	packageFlag          = "package"
+	packageFlagShortHand = "p"
+	packageFlagUsageDesc = "package name"
+)
+
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -43,15 +59,15 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is .vrsncode)")
-	rootCmd.PersistentFlags().StringVarP(&keyFile, "key", "k", "", "key file (e.g service account json file)")
-	err := viper.BindPFlag("key", rootCmd.PersistentFlags().Lookup("key"))
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, configFlag, configFlagShortHand, "", configFlagUsageDesc)
+	rootCmd.PersistentFlags().StringVarP(&keyFile, keyFlag, keyFlagShortHand, "", keyFlagUsageDesc)
+	err := viper.BindPFlag(keyFlag, rootCmd.PersistentFlags().Lookup(keyFlag))
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	rootCmd.PersistentFlags().StringVarP(&packageName, "package", "p", "", "package name")
-	err = viper.BindPFlag("package", rootCmd.PersistentFlags().Lookup("package"))
+	rootCmd.PersistentFlags().StringVarP(&packageName, packageFlag, packageFlagShortHand, "", packageFlagUsageDesc)
+	err = viper.BindPFlag(packageFlag, rootCmd.PersistentFlags().Lookup(packageFlag))
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -68,7 +84,7 @@ func initConfig() {
 			os.Exit(1)
 		}
 		viper.AddConfigPath(cwd)
-		viper.SetConfigName(".vrsncode")
+		viper.SetConfigName(defaultConfigName)
 	}
 
 	viper.AutomaticEnv()

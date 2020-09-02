@@ -36,7 +36,13 @@ to quickly create a Cobra application.`,
 	},
 }
 
+const (
+	stepFlag          = "step"
+	stepFlagShortHand = "s"
+	stepFlagUsageDesc = stepFlag
+)
+
 func init() {
 	rootCmd.AddCommand(incrementCmd)
-	incrementCmd.Flags().IntVarP(&step, "step", "s", 0, "step")
+	incrementCmd.Flags().IntVarP(&step, stepFlag, stepFlagShortHand, 0, stepFlagUsageDesc)
 }
