@@ -27,24 +27,13 @@ var cfgFile string
 var packageName string
 var keyFile string
 
-// rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "landa",
-	Short: "A brief description of your application",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	/*Run: func(cmd *cobra.Command, args []string) {
-		//pkg.CreateClient(cfgFile)
-		println(args)
-	},*/
+	Use:   "vrsncode",
+	Short: "Android Version Code manipulation tool",
+	Long: `Vrsncode is a tool to fetch and update Android version code with respect to
+the latest version code for an app deployed to play store`,
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
@@ -54,33 +43,36 @@ func Execute() {
 
 func init() {
 	cobra.OnInitialize(initConfig)
-	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is .landa)")
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (default is .vrsncode)")
 	rootCmd.PersistentFlags().StringVarP(&keyFile, "key", "k", "", "key file (e.g service account json file)")
-	viper.BindPFlag("key", rootCmd.PersistentFlags().Lookup("key"))
+	err := viper.BindPFlag("key", rootCmd.PersistentFlags().Lookup("key"))
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 	rootCmd.PersistentFlags().StringVarP(&packageName, "package", "p", "", "package name")
-	viper.BindPFlag("package", rootCmd.PersistentFlags().Lookup("package"))
+	err = viper.BindPFlag("package", rootCmd.PersistentFlags().Lookup("package"))
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
 
-// initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
-		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
-		home, err := os.Getwd()
+		cwd, err := os.Getwd()
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
-		// Search config in home directory with name ".landa" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".landa")
+		viper.AddConfigPath(cwd)
+		viper.SetConfigName(".vrsncode")
 	}
 
-	viper.AutomaticEnv() // read in environment variables that match
+	viper.AutomaticEnv()
 
-	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	}

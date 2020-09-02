@@ -17,11 +17,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/nathanmkaya/landa/pkg"
+	"github.com/nathanmkaya/vrsncode/pkg"
 	"github.com/spf13/cobra"
 )
 
-// fetchCmd represents the fetch command
 var fetchCmd = &cobra.Command{
 	Use:   "fetch",
 	Short: "A brief description of your command",

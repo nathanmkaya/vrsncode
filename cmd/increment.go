@@ -16,13 +16,12 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/nathanmkaya/landa/pkg"
+	"github.com/nathanmkaya/vrsncode/pkg"
 	"github.com/spf13/cobra"
 )
 
 var step int
 
-// incrementCmd represents the increment command
 var incrementCmd = &cobra.Command{
 	Use:   "increment",
 	Short: "A brief description of your command",

@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/nathanmkaya/landa/cmd"
+import "github.com/nathanmkaya/vrsncode/cmd"
 
 func main() {
 	cmd.Execute()

@@ -1,4 +1,4 @@
-module github.com/nathanmkaya/landa
+module github.com/nathanmkaya/vrsncode
 
 go 1.15
 
